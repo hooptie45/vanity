@@ -1,19 +1,21 @@
 require "test_helper"
+require "vanity/adapters/redis_adapter"
+require "vanity/adapters/mock_adapter"
 
 describe Vanity::Connection do
   describe "#new" do
     it "establishes connection with default specification" do
-      Vanity::Adapters.expects(:establish_connection).with(adapter: "redis")
+      Vanity::Adapters::RedisAdapter.expects(:new).with(adapter: "redis")
       Vanity::Connection.new
     end
 
     it "establishes connection given a connection specification" do
-      Vanity::Adapters.expects(:establish_connection).with(adapter: "mock")
+      Vanity::Adapters::MockAdapter.expects(:new).with(adapter: "mock")
       Vanity::Connection.new(adapter: "mock")
     end
 
     it "parses from a string" do
-      Vanity::Adapters.expects(:establish_connection).with(
+      Vanity::Adapters::RedisAdapter.expects(:new).with(
         adapter: 'redis',
         username: 'user',
         password: 'secrets',
@@ -33,7 +35,7 @@ describe Vanity::Connection do
 
     it "allows a redis connection to be specified" do
       redis = stub("Redis")
-      Vanity::Adapters.expects(:establish_connection).with(adapter: :redis, redis: redis)
+      Vanity::Adapters::RedisAdapter.expects(:new).with(adapter: :redis, redis: redis)
       Vanity::Connection.new(redis: redis)
     end
   end
