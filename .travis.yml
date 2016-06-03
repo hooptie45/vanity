@@ -4,7 +4,7 @@ language: ruby
 before_script:
   - 'echo ''gem: --no-ri --no-rdoc'' > ~/.gemrc' # skip installing docs for gems
 before_install:
-  - gem install bundler -v ">= 1.8.0" # Minimum version of bundler required
+  - gem update bundler
 bundler_args: --without development
 script: 'bundle exec rake test'
 services:
@@ -14,11 +14,14 @@ rvm:
   - 2.1.0
   - 2.2.0
   - 2.3.0
-  - jruby-19mode
+  - jruby
 env:
-  - DB=mongodb
-  - DB=redis
-  - DB=active_record
+  global:
+    - JRUBY_OPTS='-J-Xmx1024M --2.0'
+  matrix:
+    - DB=mongodb
+    - DB=redis
+    - DB=active_record
 gemfile:
   - gemfiles/rails32.gemfile
   - gemfiles/rails41.gemfile
