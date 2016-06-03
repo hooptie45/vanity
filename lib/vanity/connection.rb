@@ -109,7 +109,9 @@ module Vanity
       end
 
       klass = spec[:adapter].to_s.split('_').collect(&:capitalize).join
-      Kernel.const_get("Vanity::Adapters::#{klass}Adapter").new(spec)
+      # Get the class constant directly from the module instead of chaining
+      # the constant with `::` to avoid breaking on jruby in 1
+      Vanity::Adapters.const_get("#{klass}Adapter").new(spec)
     end
   end
 end
